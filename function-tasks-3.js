@@ -545,41 +545,13 @@ console.log();
 //  Po skiriamojo ženklo tarpas, o prieš skiriamajį ženklą nėra tarpo (skiriamieji ženklai: .,!?)
 //  Bet kokį kiekį tapų pakeičia vienu tarpu
 //    mėgstu pieną , bet medų nelabai.labanakt. -> Mėgstu pieną, bet medų nelabai. Labanakt.
-console.group("30. Sukurkite funkciją, kuri taiso pastraipos klaidas");
+console.groupCollapsed("30. Sukurkite funkciją, kuri taiso pastraipos klaidas");
 {
 
   function capitalizeFirstWord(str) {
-    // return str.charAt(0).toUpperCase();
-  }
-  // debugger;
-  function splitIntoSentences(paragraph) {
-    let removedSpace = paragraph.replace(/\s+/g, ' ');
-    let sentences = [];
-    sentences = removedSpace.trim().match(/.*?[?!.]/g);
-    // for (let i = 0; i < paragraph.length; i++) {
-    //   const elem = paragraph[i];
-    //   let separators = [];
-    //   if (elem === '.' || '?' || '!') {
-    //     separators.push(elem)
-    //   }
-    //   return separators;
-    // }
-
-    // let separators = [];
-    // for (let i = 0; i < sentences.length; i++) {
-    //   if (sentences[i].endsWith('.')) {
-    //     separators.push(sentences[i][sentences.length - 1]);
-    //   } else {
-    //     return 'not a separator'
-    //   }
-    // } return separators;
-    return sentences;
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  // let sentences = [];
-  // sentences = paragraph.match(/.*?[?!.]/g);
-  // let removedSpace = paragraph.replace(/\s+/g, ' ');
-  // console.log(removedSpace);
   /* 
   2.1 atskirti pagal sakinio baigimo zenklus ir juos isiminti
   2.2 pasalinti tarpus is krastu,
@@ -587,34 +559,61 @@ console.group("30. Sukurkite funkciją, kuri taiso pastraipos klaidas");
   {
     sentence: [sentence1,sentence2...],
     seperator: [!,?...visi]
+  } */
+
+  function splitIntoSentences(paragraph) {
+    const result = {
+      sentences: [],
+      separators: [],
+    };
+    let sentenceStart = 0;
+    for (let i = 0; i < paragraph.length; i++) {
+      const elem = paragraph[i];
+      if (['.', '?', '!'].includes(elem)) {
+        //The includes() method determines whether an array includes a certain value among its entries, returning true or false as appropriate. Includes yra case sensitive
+        const sentence = capitalizeFirstWord(paragraph.slice(sentenceStart, i).trim()); //susikuriam sentence ir jam priskiriam paragrapho slice'a nuo pradzios iki skirybos zenklo,kuris yra itasis elementas for loope
+        result.sentences.push(sentence);
+        result.separators.push(elem);
+        sentenceStart = i + 1; //sita pasirasau,kad sekantis loopas prasidetu nuo ten kur aptiktas kirybos zenklas+1,t.y.,kad eitu paragrafu toliau 
+      }
+    }
+    return result;
   }
-   
-  */
-
-
 
   function reduceEmptySpaces(str) {
-    // code ... Mano sugalvota logika kaip salinti tarpus pries kableli ir kelis tarpus is eiles
-  }
-  //sita funkcija pati pirma
+    for (let i = str.length - 1; i >= 0; i--) { //iteruojam nuo stringo pabaigos i prieki
+      const letter = str[i];    // susikuriam kintamaji letter,kuris yra itasis ciklo elementas
+      const prevLetter = str[i - 1]; //dar vienas kintamasis kuris yra elementas esantis pries iteruojama elementa,pvz.:labas->s yra [i],o a yra [i-1]
+      if ([' ', ','].includes(letter) && prevLetter === ' ') { //'jeigu paimtas stringas kuriame yra '  ' ar ',' savyje turi raide ir pries ta raide taip pat yra tarpas'
+        str = str.slice(0, i - 1) + str.slice(i); //tai iskerpa tik raide? ir likusia stringo dali i desine puse,pvz '   labas'-> 'l'+'abas'='labas'??
+      }
+    }
+    return str;
+  };
+
   function fixParagraph(paragraph) {
-    /*1.isskaidyti i sakinius: string=>[sakinys1,sakinys2...],[separator1,separator2..]tam yra kvieciame splitIntoSentence funkcija
-    3.redaguoti kiekviena sakini naudojant funkcija reduceEmptySpaces
-    4.redaguoti kiekviena sakini naudojant funkcija capitalizeFirstLetter
-    5.Sujungti sakinius su atitinkamais sakiniu skiriamaisiais zenklais
-    6.grazinti rezultata
-        
-        */
+    const { sentences, separators } = splitIntoSentences(paragraph); //cia yra du masyvai tarsi istraukiami is funkcijas,kurioje buvo sukurti,tam kad galima juos butu naudoti funkcijoje
+    let result = ''; //cia nurodom,kad resultatas bus stringas
+    for (let i = 0; i < sentences.length; i++) { //iteruojam per sentences masyva
+      const sentence = reduceEmptySpaces(sentences[i]); //sukuriam kintamaji sentence,kuris tampa sutvarkytu ituoju elementu(sakiniu su normaliais tarpais)
+      result += sentence + separators.shift() + ' '; //i stringa pridedam sutvarkyta sakini ir jo gale pridedam skiriamaji zenkla ir tarpa po jo.
+    }
+    return result;
   }
+  /*1.isskaidyti i sakinius: string=>[sakinys1,sakinys2...],[separator1,separator2..]tam yra kvieciame splitIntoSentence funkcija
+  3.redaguoti kiekviena sakini naudojant funkcija reduceEmptySpaces
+  4.redaguoti kiekviena sakini naudojant funkcija capitalizeFirstLetter
+  5.Sujungti sakinius su atitinkamais sakiniu skiriamaisiais zenklais
+  6.grazinti rezultata*/
+
 
   const paragraph = '    labas , as jonas . Tave      vadina Kęstu? Taip ir žinojau  !    ';
+  const fixedParagraph = fixParagraph(paragraph);
 
-  console.log(splitIntoSentences(paragraph));
-
-  // const fixedParagraph = fixParagraph(paragraph);
+  console.log(fixedParagraph);
   console.log(paragraph);
-  // console.log(fixedParagraph);
-  // console.log('---');
+
+  console.log('---');
 }
 console.groupEnd();
 console.log();
