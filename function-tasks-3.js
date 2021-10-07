@@ -521,6 +521,13 @@ console.groupCollapsed("29. Sukurkite funkciją, kuri grąžina <true>, jeigu ž
       return true;
     }
   }
+  //let i=0;
+  //let k=str.length-1;
+  //while(i<k){
+  //if(str[i]!==str[k]) return false;
+  //}
+  //return true;
+
   console.log('---');
   console.log({
     'mama': isPalyndrome('mama'),
@@ -542,25 +549,72 @@ console.group("30. Sukurkite funkciją, kuri taiso pastraipos klaidas");
 {
 
   function capitalizeFirstWord(str) {
-    return str.charAt(0).toUpperCase();
+    // return str.charAt(0).toUpperCase();
+  }
+  // debugger;
+  function splitIntoSentences(paragraph) {
+    let removedSpace = paragraph.replace(/\s+/g, ' ');
+    let sentences = [];
+    sentences = removedSpace.trim().match(/.*?[?!.]/g);
+    // for (let i = 0; i < paragraph.length; i++) {
+    //   const elem = paragraph[i];
+    //   let separators = [];
+    //   if (elem === '.' || '?' || '!') {
+    //     separators.push(elem)
+    //   }
+    //   return separators;
+    // }
+
+    // let separators = [];
+    // for (let i = 0; i < sentences.length; i++) {
+    //   if (sentences[i].endsWith('.')) {
+    //     separators.push(sentences[i][sentences.length - 1]);
+    //   } else {
+    //     return 'not a separator'
+    //   }
+    // } return separators;
+    return sentences;
   }
 
-  function splitIntoSentences(paragraph) {
-    // code ...
+  // let sentences = [];
+  // sentences = paragraph.match(/.*?[?!.]/g);
+  // let removedSpace = paragraph.replace(/\s+/g, ' ');
+  // console.log(removedSpace);
+  /* 
+  2.1 atskirti pagal sakinio baigimo zenklus ir juos isiminti
+  2.2 pasalinti tarpus is krastu,
+  2.3 grazinti objekta su dviem masyvais:
+  {
+    sentence: [sentence1,sentence2...],
+    seperator: [!,?...visi]
   }
+   
+  */
+
+
 
   function reduceEmptySpaces(str) {
-    // code ...
+    // code ... Mano sugalvota logika kaip salinti tarpus pries kableli ir kelis tarpus is eiles
+  }
+  //sita funkcija pati pirma
+  function fixParagraph(paragraph) {
+    /*1.isskaidyti i sakinius: string=>[sakinys1,sakinys2...],[separator1,separator2..]tam yra kvieciame splitIntoSentence funkcija
+    3.redaguoti kiekviena sakini naudojant funkcija reduceEmptySpaces
+    4.redaguoti kiekviena sakini naudojant funkcija capitalizeFirstLetter
+    5.Sujungti sakinius su atitinkamais sakiniu skiriamaisiais zenklais
+    6.grazinti rezultata
+        
+        */
   }
 
-  function fixParagraph(paragraph) {
-    // code ...
-  }
   const paragraph = '    labas , as jonas . Tave      vadina Kęstu? Taip ir žinojau  !    ';
-  const fixedParagraph = fixParagraph(paragraph);
+
+  console.log(splitIntoSentences(paragraph));
+
+  // const fixedParagraph = fixParagraph(paragraph);
   console.log(paragraph);
-  console.log(fixedParagraph);
-  console.log('---');
+  // console.log(fixedParagraph);
+  // console.log('---');
 }
 console.groupEnd();
 console.log();
