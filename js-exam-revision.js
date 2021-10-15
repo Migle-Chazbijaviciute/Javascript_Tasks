@@ -1,25 +1,25 @@
 //---------------------1 DALIS-------------------------------------
-peopleArray = [
+const peopleArray = [
   {
     name: 'Jonas',
     surname: 'Jonaitis',
-    age: 18,
-    heigth: 1.90,
-    weight: 85,
+    age: 13,
+    heigth: 1.50,
+    weight: 95,
     sex: 'male',
   },
   {
     name: 'Valdas',
     surname: 'Valdaitis',
     age: 30,
-    heigth: 1.65,
+    heigth: 1.95,
     weight: 55,
     sex: 'male',
   },
   {
     name: 'Skaistė',
     surname: 'Skaistaitė',
-    age: 23,
+    age: 19,
     heigth: 1.65,
     weight: 85,
     sex: 'female',
@@ -27,17 +27,17 @@ peopleArray = [
   {
     name: 'Janina',
     surname: 'Janinienė',
-    age: 45,
+    age: 75,
     heigth: 1.48,
-    weight: 45,
+    weight: 95,
     sex: 'female',
   },
   {
     name: 'Aistis',
     surname: 'Aisčius',
-    age: 25,
-    heigth: 1.88,
-    weight: 75,
+    age: 85,
+    heigth: 1.48,
+    weight: 115,
     sex: 'male',
   },
   {
@@ -45,23 +45,23 @@ peopleArray = [
     surname: 'Tominas',
     age: 35,
     heigth: 1.75,
-    weight: 65,
+    weight: 45,
     sex: 'male',
   },
   {
     name: 'Jonė',
-    surname: 'Jonaitienė',
-    age: 55,
-    heigth: 1.72,
-    weight: 98,
+    surname: 'Jonaitė',
+    age: 12,
+    heigth: 1.40,
+    weight: 85,
     sex: 'female',
   },
   {
     name: 'Dalia',
     surname: 'Dalytė',
-    age: 32,
-    heigth: 1.80,
-    weight: 55,
+    age: 72,
+    heigth: 1.65,
+    weight: 95,
     sex: 'female',
   }
 ];
@@ -74,7 +74,7 @@ peopleArray.forEach(person => console.log(person));
 //- Atspausdinti kiekvieno elemento pilną vardą
 peopleArray.forEach(person => console.log(`${person.name} ${person.surname}`));
 //- Atspausdinti kiekvieno elemento kūno masės indeksą
-peopleArray.forEach(person => console.log(person.weight / (person.heigth ** 2)));
+peopleArray.forEach(person => console.log(Math.round(10 * person.weight / (person.heigth ** 2)) / 10));
 console.groupEnd();
 
 console.groupCollapsed('Task3.filter');
@@ -107,13 +107,13 @@ console.log(weights);
 //   }
 // };
 // console.log(peopleArray.map(heigthWeightAge));
-const heigthWeightAge = peopleArray.map(({ heigth, weight, age, ...other }) => ({ heigth, weight, age }));
+const heigthWeightAge = peopleArray.map(({ heigth, weight, age }) => ({ heigth, weight, age }));
 console.log(heigthWeightAge);
 //KMI indeksus
-const kmi = peopleArray.map(person => person.weight / (person.heigth ** 2));
+const kmi = peopleArray.map(person => Math.round(10 * person.weight / (person.heigth ** 2)) / 10);
 console.log(kmi);
 //KMI indeksus ir amzius
-const ageKMI = peopleArray.map(({ age, weight, heigth }) => ({ age, kmi: (weight / (heigth ** 2)) }));
+const ageKMI = peopleArray.map(({ age, weight, heigth }) => ({ age, kmi: Math.round(10 * weight / (heigth ** 2)) / 10 }));
 console.log(ageKMI);
 console.groupEnd();
 
@@ -131,33 +131,52 @@ console.groupEnd();
 //----------------------------2 DALIS----------------------------------
 console.group('ANTRA DALIS');
 class Person {
-  constructor(name, surname, age, heigth, weight, sex) {
-    this.name = name
-    this.surname = surname
-    this.age = age
-    this.heigth = heigth
-    this.weight = weight
-    this.sex = sex
+  constructor({ name, surname, age, heigth, weight, sex }) {
+    this.name = name,
+      this.surname = surname,
+      this.age = age,
+      this.heigth = heigth,
+      this.weight = weight,
+      this.sex = sex
   }
 
-  getBMI() {
-    return this.weight / (this.heigth ** 2)
+  getBMI = () => {
+    return Math.round(10 * this.weight / (this.heigth ** 2)) / 10
   }
 
-  toString() {
-    console.log();
+  toString = () => {
+    const { name, surname, ...rest } = this;
+    return Object.entries(rest)
+      .filter(([_, propVal]) => typeof propVal !== 'function')
+      .reduce((propString, [name, val]) => propString + `\n\t${name}: ${val}`, `${name} ${surname}:`);
   }
 };
+//task0 sukuriu nauja masyva newpeople:
+const newPeople = peopleArray.map(x => new Person(x));
+console.table(newPeople);
+//visiems kmi apskaiciuoja
+newPeople.forEach(p => console.log(p.getBMI()));
+//spausdina kiekviena kaip stringa
+newPeople.forEach(p => console.log(p.toString()));
 
-const newPeople = [
-  new Person('Jonas', 'Jonaitis', 18, 1.90, 85, 'male'),
-  new Person('Valdas', 'Valdaitis', 30, 1.65, 55, 'male'),
-  new Person('Skaistė', 'Skaistaitė', 23, 1.65, 85, 'female'),
-  new Person('Janina', 'Janinienė', 45, 1.48, 45, 'female'),
-  new Person('Aistis', 'Aisčius', 25, 1.88, 75, 'male'),
-  new Person('Tomas', 'Tominas', 35, 1.75, 65, 'male'),
-  new Person('Jonė', 'Jonaitienė', 55, 1.72, 98, 'female'),
-  new Person('Dalia', 'Dalytė', 32, 1.80, 55, 'female')
-]
-console.log(newPeople);
+//task1
+const woman20WeightMoreThan70 = newPeople.filter(p => p.sex === 'female' && p.age < 20 && p.weight > 70);
+console.log(woman20WeightMoreThan70);
+
+//task2 vyrai >25m; KMI<18,5
+const man25KMILessThan = newPeople.filter(p => p.sex === 'male' && p.age > 25 && p.getBMI() < 18.5);
+console.log(man25KMILessThan);
+
+//task3 kids=age<18; KMI>30
+const obeseKids = newPeople.filter(p => p.age < 18 && p.getBMI() > 30);
+console.log(obeseKids);
+
+//task4 pensijinis amzius bus 62m 
+const pens = newPeople.filter(p => p.age > 62 && p.getBMI() > 30);
+console.log(pens);
+
+//task5 KMI>18.5 arba didesnis uz 25 NEPATENKA i reziu [18.5;25]
+const toLittleOrToMuch = newPeople.filter(p => p.getBMI() < 18.5 || p.getBMI() > 25);
+console.log(toLittleOrToMuch);
+
 console.groupEnd();
